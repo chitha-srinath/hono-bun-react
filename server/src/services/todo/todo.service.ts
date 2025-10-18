@@ -2,6 +2,7 @@ import { Todo } from "../../types/todo.types";
 import { NotFoundError } from "../../errors/custom.errors";
 import { TodoUpdateFields } from "../../enums/todo.enum";
 import { ERROR_MESSAGES } from "../../constants/error.constants";
+import { CreateTodoInput } from "@/validation/schemas";
 
 // TodoService handles todo business logic
 export class TodoService {
@@ -24,11 +25,11 @@ export class TodoService {
   }
 
   // Create a new todo
-  async createTodo(title: string, description?: string): Promise<Todo> {
+  async createTodo(payload: CreateTodoInput): Promise<Todo> {
     const newTodo: Todo = {
       id: this.nextId++,
-      title,
-      description: description || "",
+      title: payload.title,
+      description: payload.description || "",
       completed: false,
       createdAt: new Date().toISOString(),
     };

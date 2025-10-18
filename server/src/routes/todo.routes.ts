@@ -1,3 +1,4 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { ERROR_MESSAGES } from "../constants/error.constants";
 import { SUCCESS_MESSAGES } from "../constants/success.constants";
@@ -7,8 +8,6 @@ import {
   createSuccessResponse,
 } from "../types/response.types";
 import { Todo } from "../types/todo.types";
-import { validate } from "../middleware/validation.middleware";
-import { ValidationTargets } from "../enums/validation.enum";
 import {
   CreateTodoInput,
   UpdateTodoInput,
@@ -34,56 +33,53 @@ todoRouter.get("/", async (c) => {
 });
 
 // Get todo by ID
-todoRouter.get(
-  "/:id",
-  validate(idSchema, ValidationTargets.PARAM),
-  async (c) => {
-    try {
-      const id = parseInt(c.req.param("id"));
-
-      const todo: Todo = await todoService.getTodoById(id);
-      return c.json(
-        createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED, { todo })
-      );
-    } catch (error) {
-      console.error("Error fetching todo:", error);
-      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 404);
+todoRouter.get("/:id", zValidator("param", idSchema), async (c) => {
+  try {
+    const param = c.req.param("id");
+    if (param === undefined) {
+      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
     }
+    const id = parseInt(param, 10);
+
+    const todo: Todo = await todoService.getTodoById(id);
+    return c.json(
+      createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED, { todo })
+    );
+  } catch (error) {
+    console.error("Error fetching todo:", error);
+    return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 404);
   }
-);
+});
 
 // Create a new todo
-todoRouter.post(
-  "/",
-  validate(createTodoSchema, ValidationTargets.JSON),
-  async (c) => {
-    try {
-      const { title, description } = c.req.valid("json");
+todoRouter.post("/", zValidator("json", createTodoSchema), async (c) => {
+  try {
+    const payload = c.req.valid("json");
 
-      const todo: Todo = await todoService.createTodo(title, description);
-      return c.json(
-        createSuccessResponse(SUCCESS_MESSAGES.TODO.CREATED, { todo }),
-        201
-      );
-    } catch (error) {
-      console.error("Error creating todo:", error);
-      return c.json(
-        createErrorResponse(ERROR_MESSAGES.TODO.CREATE_FAILED),
-        500
-      );
-    }
+    const todo: Todo = await todoService.createTodo(payload);
+    return c.json(
+      createSuccessResponse(SUCCESS_MESSAGES.TODO.CREATED, { todo }),
+      201
+    );
+  } catch (error) {
+    console.error("Error creating todo:", error);
+    return c.json(createErrorResponse(ERROR_MESSAGES.TODO.CREATE_FAILED), 500);
   }
-);
+});
 
 // Update a todo
 todoRouter.put(
   "/:id",
-  validate(idSchema, ValidationTargets.PARAM),
-  validate(updateTodoSchema, ValidationTargets.JSON),
+  zValidator("param", idSchema),
+  zValidator("json", updateTodoSchema),
   async (c) => {
     try {
-      const id = parseInt(c.req.param("id"));
-      const updates = c.req.valid("json") as UpdateTodoInput;
+      const param = c.req.param("id");
+      if (param === undefined) {
+        return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
+      }
+      const id = parseInt(param, 10);
+      const updates = c.req.valid("json");
 
       const todo: Todo = await todoService.updateTodo(id, updates);
 
@@ -101,47 +97,41 @@ todoRouter.put(
 );
 
 // Delete a todo
-todoRouter.delete(
-  "/:id",
-  validate(idSchema, ValidationTargets.PARAM),
-  async (c) => {
-    try {
-      const id = parseInt(c.req.param("id"));
-
-      const todo: Todo = await todoService.deleteTodo(id);
-      return c.json(
-        createSuccessResponse(SUCCESS_MESSAGES.TODO.DELETED, { todo })
-      );
-    } catch (error) {
-      console.error("Error deleting todo:", error);
-      return c.json(
-        createErrorResponse(ERROR_MESSAGES.TODO.DELETE_FAILED),
-        500
-      );
+todoRouter.delete("/:id", zValidator("param", idSchema), async (c) => {
+  try {
+    const param = c.req.param("id");
+    if (param === undefined) {
+      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
     }
+    const id = parseInt(param, 10);
+
+    const todo: Todo = await todoService.deleteTodo(id);
+    return c.json(
+      createSuccessResponse(SUCCESS_MESSAGES.TODO.DELETED, { todo })
+    );
+  } catch (error) {
+    console.error("Error deleting todo:", error);
+    return c.json(createErrorResponse(ERROR_MESSAGES.TODO.DELETE_FAILED), 500);
   }
-);
+});
 
 // Toggle todo completion status
-todoRouter.patch(
-  "/:id/toggle",
-  validate(idSchema, ValidationTargets.PARAM),
-  async (c) => {
-    try {
-      const id = parseInt(c.req.param("id"));
-
-      const todo: Todo = await todoService.toggleTodo(id);
-      return c.json(
-        createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo })
-      );
-    } catch (error) {
-      console.error("Error toggling todo:", error);
-      return c.json(
-        createErrorResponse(ERROR_MESSAGES.TODO.TOGGLE_FAILED),
-        500
-      );
+todoRouter.patch("/:id/toggle", zValidator("param", idSchema), async (c) => {
+  try {
+    const param = c.req.param("id");
+    if (param === undefined) {
+      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
     }
+    const id = parseInt(param, 10);
+
+    const todo: Todo = await todoService.toggleTodo(id);
+    return c.json(
+      createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo })
+    );
+  } catch (error) {
+    console.error("Error toggling todo:", error);
+    return c.json(createErrorResponse(ERROR_MESSAGES.TODO.TOGGLE_FAILED), 500);
   }
-);
+});
 
 export default todoRouter;
