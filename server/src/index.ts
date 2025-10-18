@@ -3,6 +3,7 @@ import { errorHandler } from "./middleware/error.middleware";
 import router from "./routes/index.routes";
 import { createSuccessResponse } from "./types/response.types";
 import { NotFoundError } from "./errors/custom.errors";
+import { env } from "./utils/env.utils";
 
 const app = new Hono();
 
@@ -26,4 +27,7 @@ app.notFound((c) => {
   throw new NotFoundError(`Route not found: ${c.req.method} ${c.req.url}`);
 });
 
-export default app;
+export default {
+  port: env.PORT,
+  fetch: app.fetch,
+};
