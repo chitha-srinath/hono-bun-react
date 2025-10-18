@@ -1,9 +1,10 @@
+import { LoginInput, RegisterInput } from "@/validation/schemas";
 import { UnauthorizedError, NotFoundError } from "../../errors/custom.errors";
 
 // AuthService handles authentication business logic
 export class AuthService {
   // Register a new user
-  async register(username: string, email: string, password: string) {
+  async register(payload: RegisterInput) {
     // In a real implementation, you would:
     // 1. Check if user already exists
     // 2. Hash the password
@@ -11,12 +12,13 @@ export class AuthService {
     // 4. Generate JWT token
 
     // Mock implementation
-    console.log(`Registering user: ${username}, ${email}`);
+    console.log(`Registering user: ${payload.username}, ${payload.email}`);
 
     const user = {
       id: Date.now(),
-      username,
-      email,
+      username: payload.username,
+      email: payload.email,
+      password: payload.password,
     };
 
     // Mock token generation
@@ -29,23 +31,23 @@ export class AuthService {
   }
 
   // Login user
-  async login(email: string, password: string) {
+  async login(payload: LoginInput) {
     // In a real implementation, you would:
     // 1. Find user by email
     // 2. Verify password
     // 3. Generate JWT token
 
     // Mock implementation
-    console.log(`Logging in user: ${email}`);
+    console.log(`Logging in user: ${payload.email}`);
 
     // Simulate authentication failure
-    if (password !== "correctpassword") {
+    if (payload.password !== "correctpassword") {
       throw new UnauthorizedError("Invalid email or password");
     }
 
     const user = {
       id: Date.now(),
-      email,
+      email: payload.email,
     };
 
     // Mock token generation

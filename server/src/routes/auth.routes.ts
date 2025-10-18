@@ -1,18 +1,15 @@
-import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
 import { authService } from "../services/auth/auth.service";
 import {
-  registerSchema,
+  createErrorResponse,
+  createSuccessResponse,
+} from "../types/response.types";
+import {
   loginSchema,
+  registerSchema,
   tokenSchema,
 } from "../validation/schemas";
-import {
-  SuccessResponse,
-  ErrorResponse,
-  createSuccessResponse,
-  createErrorResponse,
-} from "../types/response.types";
-import { Todo } from "../types/todo.types";
 
 // Initialize the auth router
 const authRouter = new Hono();
@@ -20,14 +17,10 @@ const authRouter = new Hono();
 // Register route
 authRouter.post("/register", zValidator("json", registerSchema), async (c) => {
   try {
-    const { username, email, password } = c.req.valid("json");
+    const reqBody = c.req.valid("json");
 
     // Call auth service to register user
-    const { user, token } = await authService.register(
-      username,
-      email,
-      password
-    );
+    const { user, token } = await authService.register(reqBody);
 
     return c.json(
       createSuccessResponse("User registered successfully", { user, token }),
@@ -42,10 +35,10 @@ authRouter.post("/register", zValidator("json", registerSchema), async (c) => {
 // Login route
 authRouter.post("/login", zValidator("json", loginSchema), async (c) => {
   try {
-    const { email, password } = c.req.valid("json");
+    const reqBody = c.req.valid("json");
 
     // Call auth service to login user
-    const { user, token } = await authService.login(email, password);
+    const { user, token } = await authService.login(reqBody);
 
     return c.json(createSuccessResponse("Login successful", { user, token }));
   } catch (error) {
@@ -57,10 +50,10 @@ authRouter.post("/login", zValidator("json", loginSchema), async (c) => {
 // Logout route
 authRouter.post("/logout", zValidator("json", tokenSchema), async (c) => {
   try {
-    const { token } = c.req.valid("json");
+    const reqBody = c.req.valid("json");
 
     // Call auth service to logout user
-    await authService.logout(token);
+    await authService.logout(reqBody.token);
 
     return c.json(createSuccessResponse("Logout successful"));
   } catch (error) {

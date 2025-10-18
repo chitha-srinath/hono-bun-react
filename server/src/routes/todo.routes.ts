@@ -12,7 +12,7 @@ import {
   UpdateTodoInput,
   createTodoSchema,
   idSchema,
-  updateTodoSchema
+  updateTodoSchema,
 } from "../validation/schemas";
 
 // Initialize the todo router
@@ -21,7 +21,7 @@ const todoRouter = new Hono();
 // Get all todos
 todoRouter.get("/", async (c) => {
   try {
-    const todos: Todo[] = await todoService.getAllTodos();
+    const todos = await todoService.getAllTodos();
     return c.json(
       createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED_ALL, { todos })
     );
@@ -34,14 +34,9 @@ todoRouter.get("/", async (c) => {
 // Get todo by ID
 todoRouter.get("/:id", zValidator("param", idSchema), async (c) => {
   try {
-    const param = c.req.param("id");
+    const reqParam = c.req.valid("param");
 
-    if (param === undefined) {
-      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
-    }
-    const id = parseInt(param, 10);
-
-    const todo: Todo = await todoService.getTodoById(id);
+    const todo: Todo = await todoService.getTodoById(+reqParam.id);
     return c.json(
       createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED, { todo })
     );
@@ -74,14 +69,10 @@ todoRouter.put(
   zValidator("json", updateTodoSchema),
   async (c) => {
     try {
-      const param = c.req.param("id");
-      if (param === undefined) {
-        return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
-      }
-      const id = parseInt(param, 10);
-      const updates = c.req.valid("json") as UpdateTodoInput;
+      const reqParam = c.req.valid("param");
+      const reqBody = c.req.valid("json") as UpdateTodoInput;
 
-      const todo: Todo = await todoService.updateTodo(id, updates);
+      const todo: Todo = await todoService.updateTodo(+reqParam.id, reqBody);
 
       return c.json(
         createSuccessResponse(SUCCESS_MESSAGES.TODO.UPDATED, { todo })
@@ -99,13 +90,9 @@ todoRouter.put(
 // Delete a todo
 todoRouter.delete("/:id", zValidator("param", idSchema), async (c) => {
   try {
-    const param = c.req.param("id");
-    if (param === undefined) {
-      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
-    }
-    const id = parseInt(param, 10);
+    const reqParam = c.req.valid("param");
 
-    const todo: Todo = await todoService.deleteTodo(id);
+    const todo: Todo = await todoService.deleteTodo(+reqParam.id);
     return c.json(
       createSuccessResponse(SUCCESS_MESSAGES.TODO.DELETED, { todo })
     );
@@ -116,29 +103,18 @@ todoRouter.delete("/:id", zValidator("param", idSchema), async (c) => {
 });
 
 // Toggle todo completion status
-todoRouter.patch(
-  "/:id/toggle",
-  zValidator("param", idSchema),
-  async (c) => {
-    try {
-      const param = c.req.param("id");
-      if (param === undefined) {
-        return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
-      }
-      const id = parseInt(param, 10);
+todoRouter.patch("/:id/toggle", zValidator("param", idSchema), async (c) => {
+  try {
+    const reqParam = c.req.valid("param");
 
-      const todo: Todo = await todoService.toggleTodo(id);
-      return c.json(
-        createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo })
-      );
-    } catch (error) {
-      console.error("Error toggling todo:", error);
-      return c.json(
-        createErrorResponse(ERROR_MESSAGES.TODO.TOGGLE_FAILED),
-        500
-      );
-    }
+    const todo: Todo = await todoService.toggleTodo(+reqParam.id);
+    return c.json(
+      createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo })
+    );
+  } catch (error) {
+    console.error("Error toggling todo:", error);
+    return c.json(createErrorResponse(ERROR_MESSAGES.TODO.TOGGLE_FAILED), 500);
   }
-);
+});
 
 export default todoRouter;
