@@ -1,0 +1,17 @@
+{
+  "name": "hono-bun-react",
+  "scripts": {
+    "server": "bun run --hot server/src/index.ts",
+    "client": "cd client && bun run dev",
+    "dev": "concurrently \"bun run server\" \"bun run client\""
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.7.4",
+    "hono": "^4.10.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "concurrently": "^9.2.1"
+  }
+}
