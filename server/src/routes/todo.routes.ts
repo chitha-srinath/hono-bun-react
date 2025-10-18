@@ -11,7 +11,7 @@ import { Hono } from "hono";
 import {
   createTodoSchema,
   idSchema,
-  updateTodoSchema
+  updateTodoSchema,
 } from "../validation/schemas";
 
 // Initialize the todo router

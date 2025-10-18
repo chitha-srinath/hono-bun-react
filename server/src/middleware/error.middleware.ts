@@ -19,6 +19,7 @@ export const errorHandler = (err: Error, c: Context) => {
   // Handle Zod validation errors
   if (err instanceof ZodError) {
     const { fieldErrors, formErrors } = handleZodError(err);
+    console.log("Zod Error:", fieldErrors, formErrors);
     return c.json(
       createErrorResponse(ERROR_MESSAGES.GENERAL.VALIDATION_FAILED, {
         fieldErrors,

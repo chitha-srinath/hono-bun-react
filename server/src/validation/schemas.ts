@@ -4,22 +4,22 @@ import { VALIDATION_MESSAGES } from "../constants/validation.constants";
 // Auth validation schemas
 export const registerSchema = z
   .object({
-    username: z.string().min(3, VALIDATION_MESSAGES.USERNAME_MIN_LENGTH),
-    email: z.email(VALIDATION_MESSAGES.EMAIL_INVALID),
-    password: z.string().min(6, VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH),
+    username: z.string().min(3, VALIDATION_MESSAGES.AUTH.USERNAME_MIN_LENGTH),
+    email: z.email(VALIDATION_MESSAGES.AUTH.EMAIL_INVALID),
+    password: z.string().min(6, VALIDATION_MESSAGES.AUTH.PASSWORD_MIN_LENGTH),
   })
   .strict();
 
 export const loginSchema = z
   .object({
-    email: z.email(VALIDATION_MESSAGES.EMAIL_INVALID),
-    password: z.string().min(1, VALIDATION_MESSAGES.PASSWORD_REQUIRED),
+    email: z.email(VALIDATION_MESSAGES.AUTH.EMAIL_INVALID),
+    password: z.string().min(1, VALIDATION_MESSAGES.AUTH.PASSWORD_REQUIRED),
   })
   .strict();
 
 export const tokenSchema = z
   .object({
-    token: z.string().min(1, VALIDATION_MESSAGES.TOKEN_REQUIRED),
+    token: z.string().min(1, VALIDATION_MESSAGES.AUTH.TOKEN_REQUIRED),
   })
   .strict();
 
@@ -28,11 +28,11 @@ export const createTodoSchema = z
   .object({
     title: z
       .string()
-      .min(1, VALIDATION_MESSAGES.TITLE_REQUIRED)
-      .max(100, VALIDATION_MESSAGES.TITLE_MAX_LENGTH),
+      .min(1, VALIDATION_MESSAGES.TODO.TITLE_REQUIRED)
+      .max(100, VALIDATION_MESSAGES.TODO.TITLE_MAX_LENGTH),
     description: z
       .string()
-      .max(500, VALIDATION_MESSAGES.DESCRIPTION_MAX_LENGTH)
+      .max(500, VALIDATION_MESSAGES.TODO.DESCRIPTION_MAX_LENGTH)
       .optional(),
   })
   .strict();
@@ -41,12 +41,12 @@ export const updateTodoSchema = z
   .object({
     title: z
       .string()
-      .min(1, VALIDATION_MESSAGES.TITLE_REQUIRED)
-      .max(100, VALIDATION_MESSAGES.TITLE_MAX_LENGTH)
+      .min(1, VALIDATION_MESSAGES.TODO.TITLE_REQUIRED)
+      .max(100, VALIDATION_MESSAGES.TODO.TITLE_MAX_LENGTH)
       .optional(),
     description: z
       .string()
-      .max(500, VALIDATION_MESSAGES.DESCRIPTION_MAX_LENGTH)
+      .max(500, VALIDATION_MESSAGES.TODO.DESCRIPTION_MAX_LENGTH)
       .optional(),
     completed: z.boolean().optional(),
   })
@@ -54,7 +54,7 @@ export const updateTodoSchema = z
 
 export const idSchema = z
   .object({
-    id: z.string().regex(/^\d+$/, VALIDATION_MESSAGES.ID_MUST_BE_POSITIVE),
+    id: z.string().regex(/^\d+$/, VALIDATION_MESSAGES.TODO.ID_MUST_BE_POSITIVE),
   })
   .strict();
 
