@@ -36,6 +36,7 @@ todoRouter.get("/", async (c) => {
 todoRouter.get("/:id", zValidator("param", idSchema), async (c) => {
   try {
     const param = c.req.param("id");
+
     if (param === undefined) {
       return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
     }
@@ -79,7 +80,7 @@ todoRouter.put(
         return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
       }
       const id = parseInt(param, 10);
-      const updates = c.req.valid("json");
+      const updates = c.req.valid("json") as UpdateTodoInput;
 
       const todo: Todo = await todoService.updateTodo(id, updates);
 
@@ -116,22 +117,29 @@ todoRouter.delete("/:id", zValidator("param", idSchema), async (c) => {
 });
 
 // Toggle todo completion status
-todoRouter.patch("/:id/toggle", zValidator("param", idSchema), async (c) => {
-  try {
-    const param = c.req.param("id");
-    if (param === undefined) {
-      return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
-    }
-    const id = parseInt(param, 10);
+todoRouter.patch(
+  "/:id/toggle",
+  zValidator("param", idSchema),
+  async (c) => {
+    try {
+      const param = c.req.param("id");
+      if (param === undefined) {
+        return c.json(createErrorResponse(ERROR_MESSAGES.TODO.NOT_FOUND), 400);
+      }
+      const id = parseInt(param, 10);
 
-    const todo: Todo = await todoService.toggleTodo(id);
-    return c.json(
-      createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo })
-    );
-  } catch (error) {
-    console.error("Error toggling todo:", error);
-    return c.json(createErrorResponse(ERROR_MESSAGES.TODO.TOGGLE_FAILED), 500);
+      const todo: Todo = await todoService.toggleTodo(id);
+      return c.json(
+        createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo })
+      );
+    } catch (error) {
+      console.error("Error toggling todo:", error);
+      return c.json(
+        createErrorResponse(ERROR_MESSAGES.TODO.TOGGLE_FAILED),
+        500
+      );
+    }
   }
-});
+);
 
 export default todoRouter;
