@@ -31,7 +31,7 @@ export const errorHandler = (err: Error, c: Context) => {
   // Handle generic errors
   return c.json(
     createErrorResponse(
-      GENERAL_ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      ERROR_MESSAGES.GENERAL.INTERNAL_SERVER_ERROR,
       undefined,
       {
         errorType: "INTERNAL_ERROR",

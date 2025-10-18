@@ -18,7 +18,7 @@ export const validate = <T extends ZodType>(
         const { fieldErrors, formErrors } = handleZodError(result.error);
 
         return c.json(
-          createErrorResponse(VALIDATION_MESSAGES.VALIDATION_FAILED, {
+          createErrorResponse(VALIDATION_MESSAGES.GENERAL.VALIDATION_FAILED, {
             fieldErrors,
             formErrors,
           }),
@@ -34,7 +34,7 @@ export const validate = <T extends ZodType>(
 
       return c.json(
         createErrorResponse(
-          VALIDATION_MESSAGES.VALIDATION_FAILED,
+          VALIDATION_MESSAGES.GENERAL.VALIDATION_FAILED,
           errorMessage
         ),
         400

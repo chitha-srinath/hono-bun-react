@@ -8,4 +8,12 @@ export const ERROR_MESSAGES = {
     DELETE_FAILED: "Failed to delete todo",
     TOGGLE_FAILED: "Failed to toggle todo",
   },
+  AUTH: {
+    TOKEN_REQUIRED: "Token required",
+    INVALID_TOKEN: "Invalid token",
+
+  },
+  GENERAL: {
+    INTERNAL_SERVER_ERROR: "Internal server error",
+  },
 } as const;

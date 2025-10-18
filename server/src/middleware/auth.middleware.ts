@@ -1,6 +1,7 @@
 import { Context, Next } from "hono";
 import { authService } from "../services/auth/auth.service";
 import { UnauthorizedError } from "../errors/custom.errors";
+import { ERROR_MESSAGES } from "@/constants/error.constants";
 
 /**
  * Middleware for authenticating requests
@@ -16,7 +17,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
 
   /** 2. Validate token */
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    throw new UnauthorizedError("Access token required");
+    throw new UnauthorizedError(ERROR_MESSAGES.AUTH.TOKEN_REQUIRED);
   }
   /** 3. Get token */
   const token = authHeader.substring(7); // Remove 'Bearer ' prefix
@@ -31,7 +32,6 @@ export const authMiddleware = async (c: Context, next: Next) => {
     /** 6. Continue to next middleware/route handler */
     await next();
   } catch (error) {
-    console.error("Authentication error:", error);
     throw new UnauthorizedError("Invalid or expired token");
   }
 };
