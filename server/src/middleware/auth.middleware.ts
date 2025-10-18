@@ -25,7 +25,6 @@ export const authMiddleware = async (c: Context, next: Next) => {
     /** 4. Validate token */
     const { userId } = await authService.validateToken(token);
     /** 5. Attach user info to context */
-    // Attach user info to context
     c.set("userId", userId);
     c.set("user", await authService.getCurrentUser(userId));
 

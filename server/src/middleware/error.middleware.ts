@@ -4,6 +4,7 @@ import { CustomError } from "../errors/custom.errors";
 import { createErrorResponse } from "../types/response.types";
 import { handleZodError } from "../utils/zod.utils";
 import { ContentfulStatusCode } from "hono/utils/http-status";
+import { ERROR_MESSAGES } from "@/constants/error.constants";
 
 export const errorHandler = (err: Error, c: Context) => {
   if (err instanceof CustomError) {
@@ -19,7 +20,7 @@ export const errorHandler = (err: Error, c: Context) => {
   if (err instanceof ZodError) {
     const { fieldErrors, formErrors } = handleZodError(err);
     return c.json(
-      createErrorResponse("Validation failed", {
+      createErrorResponse(ERROR_MESSAGES.GENERAL.VALIDATION_FAILED, {
         fieldErrors,
         formErrors,
       }),
@@ -29,9 +30,13 @@ export const errorHandler = (err: Error, c: Context) => {
 
   // Handle generic errors
   return c.json(
-    createErrorResponse("Internal server error", undefined, {
-      errorType: "INTERNAL_ERROR",
-    }),
+    createErrorResponse(
+      GENERAL_ERROR_MESSAGES.INTERNAL_SERVER_ERROR,
+      undefined,
+      {
+        errorType: "INTERNAL_ERROR",
+      }
+    ),
     500
   );
 };
