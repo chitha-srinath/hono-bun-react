@@ -1,18 +1,17 @@
-import { zValidator } from "@hono/zod-validator";
-import { Hono } from "hono";
-import { ERROR_MESSAGES } from "../constants/error.constants";
-import { SUCCESS_MESSAGES } from "../constants/success.constants";
-import { todoService } from "../services/todo/todo.service";
+import { ERROR_MESSAGES } from "@/constants/error.constants";
+import { SUCCESS_MESSAGES } from "@/constants/success.constants";
+import { todoService } from "@/services/todo/todo.service";
 import {
   createErrorResponse,
   createSuccessResponse,
-} from "../types/response.types";
-import { Todo } from "../types/todo.types";
+} from "@/types/response.types";
+import { Todo } from "@/types/todo.types";
+import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
 import {
-  UpdateTodoInput,
   createTodoSchema,
   idSchema,
-  updateTodoSchema,
+  updateTodoSchema
 } from "../validation/schemas";
 
 // Initialize the todo router
@@ -70,7 +69,7 @@ todoRouter.put(
   async (c) => {
     try {
       const reqParam = c.req.valid("param");
-      const reqBody = c.req.valid("json") as UpdateTodoInput;
+      const reqBody = c.req.valid("json");
 
       const todo: Todo = await todoService.updateTodo(+reqParam.id, reqBody);
 
