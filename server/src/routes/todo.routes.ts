@@ -9,11 +9,10 @@ import {
 } from "../types/response.types";
 import { Todo } from "../types/todo.types";
 import {
-  CreateTodoInput,
   UpdateTodoInput,
   createTodoSchema,
   idSchema,
-  updateTodoSchema,
+  updateTodoSchema
 } from "../validation/schemas";
 
 // Initialize the todo router
