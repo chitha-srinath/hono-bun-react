@@ -11,9 +11,9 @@ export const ERROR_MESSAGES = {
   AUTH: {
     TOKEN_REQUIRED: "Token required",
     INVALID_TOKEN: "Invalid token",
-
   },
   GENERAL: {
+    VALIDATION_FAILED: "Validation failed",
     INTERNAL_SERVER_ERROR: "Internal server error",
   },
 } as const;
