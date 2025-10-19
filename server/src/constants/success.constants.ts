@@ -8,4 +8,10 @@ export const SUCCESS_MESSAGES = {
 		DELETED: "Todo deleted successfully",
 		TOGGLED: "Todo toggled successfully",
 	},
+	AUTH: {
+		LOGGED_IN: "Logged in successfully",
+		LOGGED_OUT: "Logged out successfully",
+		REGISTERED: "Registered successfully",
+		USER_FETCHED: "User fetched successfully",
+	},
 } as const;

@@ -1,5 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
+import { SUCCESS_MESSAGES } from "@/constants/success.constants";
 import { authService } from "../services/auth/auth.service";
 import {
 	createErrorResponse,
@@ -23,7 +24,7 @@ authRouter.post("/register", zValidator("json", registerSchema), async (c) => {
 		const { user, token } = await authService.register(reqBody);
 
 		return c.json(
-			createSuccessResponse("User registered successfully", { user, token }),
+			createSuccessResponse(SUCCESS_MESSAGES.AUTH.REGISTERED, { user, token }),
 			201,
 		);
 	} catch (error) {
@@ -40,7 +41,9 @@ authRouter.post("/login", zValidator("json", loginSchema), async (c) => {
 		// Call auth service to login user
 		const { user, token } = await authService.login(reqBody);
 
-		return c.json(createSuccessResponse("Login successful", { user, token }));
+		return c.json(
+			createSuccessResponse(SUCCESS_MESSAGES.AUTH.LOGGED_IN, { user, token }),
+		);
 	} catch (error) {
 		console.error("Login error:", error);
 		return c.json(createErrorResponse("Login failed"), 500);
@@ -55,7 +58,7 @@ authRouter.post("/logout", zValidator("json", tokenSchema), async (c) => {
 		// Call auth service to logout user
 		await authService.logout(reqBody.token);
 
-		return c.json(createSuccessResponse("Logout successful"));
+		return c.json(createSuccessResponse(SUCCESS_MESSAGES.AUTH.LOGGED_OUT));
 	} catch (error) {
 		console.error("Logout error:", error);
 		return c.json(createErrorResponse("Logout failed"), 500);
@@ -78,9 +81,8 @@ authRouter.get("/me", async (c) => {
 
 		// Call auth service to get current user
 		const user = await authService.getCurrentUser(userId);
-
 		return c.json(
-			createSuccessResponse("User retrieved successfully", { user }),
+			createSuccessResponse(SUCCESS_MESSAGES.AUTH.USER_FETCHED, { user }),
 		);
 	} catch (error) {
 		console.error("Get user error:", error);
