@@ -84,7 +84,7 @@ export class AuthService {
 		}
 
 		const user = {
-			id: parseInt(userId),
+			id: parseInt(userId, 10),
 			username: "johndoe",
 			email: "john@example.com",
 		};
