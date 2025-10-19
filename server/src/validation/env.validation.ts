@@ -31,6 +31,14 @@ export const envSchema = z.object({
 	// Application Configuration
 	APP_NAME: z.string().min(1, ENV_VALIDATION_MESSAGES.APP_NAME_REQUIRED),
 	APP_URL: z.url(ENV_VALIDATION_MESSAGES.APP_URL_MUST_BE_VALID),
+
+	// GOOGLE_OAUTH
+	GOOGLE_CLIENT_ID: z
+		.string()
+		.min(1, ENV_VALIDATION_MESSAGES.GOOGLE_CLIENT_ID_REQUIRED),
+	GOOGLE_CLIENT_SECRET: z
+		.string()
+		.min(1, ENV_VALIDATION_MESSAGES.GOOGLE_CLIENT_SECRET_REQUIRED),
 });
 
 // Type inference for environment variables

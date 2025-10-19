@@ -1,6 +1,8 @@
+import { googleAuth } from "@hono/oauth-providers/google";
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { SUCCESS_MESSAGES } from "@/constants/success.constants";
+import { env } from "@/utils/env.utils";
 import { authService } from "../services/auth/auth.service";
 import {
 	createErrorResponse,
@@ -89,5 +91,26 @@ authRouter.get("/me", async (c) => {
 		return c.json(createErrorResponse("Failed to get user information"), 500);
 	}
 });
+
+authRouter.get(
+	"/google",
+	googleAuth({
+		client_id: env.GOOGLE_CLIENT_ID,
+		client_secret: env.GOOGLE_CLIENT_SECRET,
+		// redirect_uri: env.GOOGLE_REDIRECT_URI,
+		scope: ["openid", "email", "profile"],
+	}),
+	(c) => {
+		const token = c.get("token");
+		const grantedScopes = c.get("granted-scopes");
+		const user = c.get("user-google");
+
+		return c.json({
+			token,
+			grantedScopes,
+			user,
+		});
+	},
+);
 
 export default authRouter;

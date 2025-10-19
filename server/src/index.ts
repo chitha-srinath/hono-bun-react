@@ -1,23 +1,26 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
+import { logger } from "hono/logger";
+import { requestId } from "hono/request-id";
+import { rateLimiter } from "hono-rate-limiter";
 import { NotFoundError } from "./errors/custom.errors";
 import { errorHandler } from "./middleware/error.middleware";
 import router from "./routes/index.routes";
 import { createSuccessResponse } from "./types/response.types";
 import { env } from "./utils/env.utils";
-import { cors } from "hono/cors";
-import { logger } from "hono/logger";
-import { rateLimiter } from "hono-rate-limiter";
 
-const app = new Hono();// Apply the rate limiting middleware to all requests.
+const app = new Hono(); // Apply the rate limiting middleware to all requests.
+
+app.use("*", requestId());
 
 app.use(
 	rateLimiter({
 		windowMs: 15 * 60 * 1000, // 15 minutes
 		limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
 		standardHeaders: "draft-6", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-		keyGenerator: (c) => c.get('requestId') // Method to generate custom identifiers for clients.
+		keyGenerator: (c) => c.get("requestId"), // Method to generate custom identifiers for clients.
 		// store: ... , // Redis, MemoryStore, etc. See below.
-	})
+	}),
 );
 
 // Global error handler
