@@ -3,7 +3,8 @@
   "scripts": {
     "server": "bun run --hot server/src/index.ts",
     "client": "cd client && bun run dev",
-    "dev": "concurrently \"bun run server\" \"bun run client\""
+    "dev": "concurrently \"bun run server\" \"bun run client\"",
+    "lint": "biome check --write"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.4",
@@ -11,6 +12,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.6",
     "@types/bun": "latest",
     "concurrently": "^9.2.1"
   }

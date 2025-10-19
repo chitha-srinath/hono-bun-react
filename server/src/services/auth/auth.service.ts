@@ -1,117 +1,117 @@
-import { LoginInput, RegisterInput } from "@/validation/schemas";
-import { UnauthorizedError, NotFoundError } from "../../errors/custom.errors";
+import type { LoginInput, RegisterInput } from "@/validation/schemas";
+import { NotFoundError, UnauthorizedError } from "../../errors/custom.errors";
 
 // AuthService handles authentication business logic
 export class AuthService {
-  // Register a new user
-  async register(payload: RegisterInput) {
-    // In a real implementation, you would:
-    // 1. Check if user already exists
-    // 2. Hash the password
-    // 3. Save user to database
-    // 4. Generate JWT token
+	// Register a new user
+	async register(payload: RegisterInput) {
+		// In a real implementation, you would:
+		// 1. Check if user already exists
+		// 2. Hash the password
+		// 3. Save user to database
+		// 4. Generate JWT token
 
-    // Mock implementation
-    console.log(`Registering user: ${payload.username}, ${payload.email}`);
+		// Mock implementation
+		console.log(`Registering user: ${payload.username}, ${payload.email}`);
 
-    const user = {
-      id: Date.now(),
-      username: payload.username,
-      email: payload.email,
-      password: payload.password,
-    };
+		const user = {
+			id: Date.now(),
+			username: payload.username,
+			email: payload.email,
+			password: payload.password,
+		};
 
-    // Mock token generation
-    const token = this.generateToken(user.id.toString());
+		// Mock token generation
+		const token = this.generateToken(user.id.toString());
 
-    return {
-      user,
-      token,
-    };
-  }
+		return {
+			user,
+			token,
+		};
+	}
 
-  // Login user
-  async login(payload: LoginInput) {
-    // In a real implementation, you would:
-    // 1. Find user by email
-    // 2. Verify password
-    // 3. Generate JWT token
+	// Login user
+	async login(payload: LoginInput) {
+		// In a real implementation, you would:
+		// 1. Find user by email
+		// 2. Verify password
+		// 3. Generate JWT token
 
-    // Mock implementation
-    console.log(`Logging in user: ${payload.email}`);
+		// Mock implementation
+		console.log(`Logging in user: ${payload.email}`);
 
-    // Simulate authentication failure
-    if (payload.password !== "correctpassword") {
-      throw new UnauthorizedError("Invalid email or password");
-    }
+		// Simulate authentication failure
+		if (payload.password !== "correctpassword") {
+			throw new UnauthorizedError("Invalid email or password");
+		}
 
-    const user = {
-      id: Date.now(),
-      email: payload.email,
-    };
+		const user = {
+			id: Date.now(),
+			email: payload.email,
+		};
 
-    // Mock token generation
-    const token = this.generateToken(user.id.toString());
+		// Mock token generation
+		const token = this.generateToken(user.id.toString());
 
-    return {
-      user,
-      token,
-    };
-  }
+		return {
+			user,
+			token,
+		};
+	}
 
-  // Logout user
-  async logout(token: string) {
-    // In a real implementation, you would:
-    // 1. Invalidate the JWT token (if using token blacklist)
-    // 2. Clear any refresh tokens
+	// Logout user
+	async logout(token: string) {
+		// In a real implementation, you would:
+		// 1. Invalidate the JWT token (if using token blacklist)
+		// 2. Clear any refresh tokens
 
-    console.log(`Logging out user with token: ${token}`);
-    return { message: "Logout successful" };
-  }
+		console.log(`Logging out user with token: ${token}`);
+		return { message: "Logout successful" };
+	}
 
-  // Get current user
-  async getCurrentUser(userId: string) {
-    // In a real implementation, you would:
-    // 1. Verify JWT token
-    // 2. Fetch user data from database
+	// Get current user
+	async getCurrentUser(userId: string) {
+		// In a real implementation, you would:
+		// 1. Verify JWT token
+		// 2. Fetch user data from database
 
-    // Mock implementation
-    console.log(`Getting current user: ${userId}`);
+		// Mock implementation
+		console.log(`Getting current user: ${userId}`);
 
-    // Simulate user not found
-    if (userId !== "1") {
-      throw new NotFoundError("User not found");
-    }
+		// Simulate user not found
+		if (userId !== "1") {
+			throw new NotFoundError("User not found");
+		}
 
-    const user = {
-      id: parseInt(userId),
-      username: "johndoe",
-      email: "john@example.com",
-    };
+		const user = {
+			id: parseInt(userId),
+			username: "johndoe",
+			email: "john@example.com",
+		};
 
-    return user;
-  }
+		return user;
+	}
 
-  // Generate JWT token (mock implementation)
-  private generateToken(userId: string): string {
-    // In a real implementation, you would use a library like jsonwebtoken
-    // and sign the token with a secret key
-    return `mock-jwt-token-${userId}-${Date.now()}`;
-  }
+	// Generate JWT token (mock implementation)
+	private generateToken(userId: string): string {
+		// In a real implementation, you would use a library like jsonwebtoken
+		// and sign the token with a secret key
+		return `mock-jwt-token-${userId}-${Date.now()}`;
+	}
 
-  // Validate JWT token (mock implementation)
-  async validateToken(token: string) {
-    // In a real implementation, you would verify the token signature
-    // and extract the user ID from the token payload
+	// Validate JWT token (mock implementation)
+	async validateToken(token: string) {
+		// In a real implementation, you would verify the token signature
+		// and extract the user ID from the token payload
 
-    // Simulate invalid token
-    if (token !== "valid-token") {
-      throw new UnauthorizedError("Invalid or expired token");
-    }
+		// Simulate invalid token
+		if (token !== "valid-token") {
+			throw new UnauthorizedError("Invalid or expired token");
+		}
 
-    console.log(`Validating token: ${token}`);
-    return { userId: "1" };
-  }
+		console.log(`Validating token: ${token}`);
+		return { userId: "1" };
+	}
 }
 
 // Export singleton instance

@@ -1,8 +1,8 @@
 import { Hono } from "hono";
+import { NotFoundError } from "./errors/custom.errors";
 import { errorHandler } from "./middleware/error.middleware";
 import router from "./routes/index.routes";
 import { createSuccessResponse } from "./types/response.types";
-import { NotFoundError } from "./errors/custom.errors";
 import { env } from "./utils/env.utils";
 
 const app = new Hono();
@@ -12,11 +12,11 @@ app.onError(errorHandler);
 
 // Health check route
 app.get("/health", (c) => {
-  return c.json(
-    createSuccessResponse("Server is running", {
-      timestamp: new Date().toISOString(),
-    })
-  );
+	return c.json(
+		createSuccessResponse("Server is running", {
+			timestamp: new Date().toISOString(),
+		}),
+	);
 });
 
 // API routes
@@ -24,10 +24,10 @@ app.route("/api", router);
 
 // Catch-all route for unmatched routes
 app.notFound((c) => {
-  throw new NotFoundError(`Route not found: ${c.req.method} ${c.req.url}`);
+	throw new NotFoundError(`Route not found: ${c.req.method} ${c.req.url}`);
 });
 
 export default {
-  port: env.PORT,
-  fetch: app.fetch,
+	port: env.PORT,
+	fetch: app.fetch,
 };
