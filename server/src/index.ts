@@ -1,8 +1,8 @@
 import { Hono } from "hono";
+import { rateLimiter } from "hono-rate-limiter";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { requestId } from "hono/request-id";
-import { rateLimiter } from "hono-rate-limiter";
 import { NotFoundError } from "./errors/custom.errors";
 import { errorHandler } from "./middleware/error.middleware";
 import router from "./routes/index.routes";
