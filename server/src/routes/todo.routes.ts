@@ -22,7 +22,7 @@ todoRouter.get("/", async (c) => {
 	try {
 		const todos = await todoService.getAllTodos();
 		return c.json(
-			createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED_ALL, { todos }),
+			createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED_ALL, { todos }), 200
 		);
 	} catch (error) {
 		console.error("Error fetching todos:", error);
@@ -37,7 +37,7 @@ todoRouter.get("/:id", zValidator("param", idSchema), async (c) => {
 
 		const todo: Todo = await todoService.getTodoById(+reqParam.id);
 		return c.json(
-			createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED, { todo }),
+			createSuccessResponse(SUCCESS_MESSAGES.TODO.RETRIEVED, { todo }), 200
 		);
 	} catch (error) {
 		console.error("Error fetching todo:", error);
@@ -75,6 +75,7 @@ todoRouter.put(
 
 			return c.json(
 				createSuccessResponse(SUCCESS_MESSAGES.TODO.UPDATED, { todo }),
+				200
 			);
 		} catch (error) {
 			console.error("Error updating todo:", error);
@@ -94,6 +95,7 @@ todoRouter.delete("/:id", zValidator("param", idSchema), async (c) => {
 		const todo: Todo = await todoService.deleteTodo(+reqParam.id);
 		return c.json(
 			createSuccessResponse(SUCCESS_MESSAGES.TODO.DELETED, { todo }),
+			200
 		);
 	} catch (error) {
 		console.error("Error deleting todo:", error);
@@ -109,6 +111,7 @@ todoRouter.patch("/:id/toggle", zValidator("param", idSchema), async (c) => {
 		const todo: Todo = await todoService.toggleTodo(+reqParam.id);
 		return c.json(
 			createSuccessResponse(SUCCESS_MESSAGES.TODO.TOGGLED, { todo }),
+			200
 		);
 	} catch (error) {
 		console.error("Error toggling todo:", error);
