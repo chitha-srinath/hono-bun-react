@@ -1,7 +1,7 @@
 {
   "name": "hono-bun-react",
   "scripts": {
-    "server": "biome run lint && bun run --hot server/src/index.ts",
+    "server": "bun run lint && bun run --hot server/src/index.ts",
     "client": "cd client && bun run dev",
     "dev": "concurrently \"bun run server\" \"bun run client\"",
     "lint": "biome check --write --unsafe"
