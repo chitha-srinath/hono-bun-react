@@ -31,7 +31,7 @@ export const authMiddleware = async (c: Context, next: Next) => {
 
 		/** 6. Continue to next middleware/route handler */
 		await next();
-	} catch (error) {
+	} catch (_error) {
 		throw new UnauthorizedError("Invalid or expired token");
 	}
 };
