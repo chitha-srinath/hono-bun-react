@@ -8,7 +8,7 @@ import { errorHandler } from "./middleware/error.middleware";
 import router from "./routes/index.routes";
 import { createSuccessResponse } from "./types/response.types";
 import { env } from "./utils/env.utils";
-import { redisService } from "./utils/redis.service";
+import { redisService } from "./utils/cache";
 
 const app = new Hono(); // Apply the rate limiting middleware to all requests.
 
