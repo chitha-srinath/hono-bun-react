@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/error.middleware";
 import router from "./routes/index.routes";
 import { createSuccessResponse } from "./types/response.types";
 import { env } from "./utils/env.utils";
+import { redisService } from "./services/redis/redis.service";
 
 const app = new Hono(); // Apply the rate limiting middleware to all requests.
 
@@ -37,6 +38,14 @@ app.use(
 if (env.NODE_ENV === "development") {
 	app.use("*", logger());
 }
+
+if (redisService.isConnectedToRedis()) {
+	console.log("✅ Redis service is connected and ready to use");
+} else {
+	console.warn("⚠️  Redis service is not connected. Redis features will be disabled.");
+	process.exit(1);
+}
+
 
 app.onError(errorHandler);
 

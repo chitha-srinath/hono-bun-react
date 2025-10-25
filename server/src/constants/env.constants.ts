@@ -20,7 +20,10 @@ export const ENV_VALIDATION_MESSAGES = {
 	APP_NAME_REQUIRED: "APP_NAME is required",
 	APP_URL_MUST_BE_VALID: "APP_URL must be a valid URL",
 
-	// GOOGLe Configuration
+	// GOOGLE Configuration
 	GOOGLE_CLIENT_ID_REQUIRED: "GOOGLE_CLIENT_ID is required",
 	GOOGLE_CLIENT_SECRET_REQUIRED: "GOOGLE_CLIENT_SECRET is required",
+
+	// Redis Configuration
+	REDIS_URL_MUST_BE_VALID: "REDIS_URL must be a valid URL",
 } as const;

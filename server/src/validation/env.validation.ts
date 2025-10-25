@@ -10,7 +10,7 @@ export const envSchema = z.object({
 		.string()
 		.regex(/^\d+$/, ENV_VALIDATION_MESSAGES.PORT_MUST_BE_NUMBER)
 		.default(ENV_VALIDATION_MESSAGES.PORT_DEFAULT),
-	NODE_ENV: z.enum(NODE_ENV).default(NODE_ENV.DEVELOPMENT),
+	NODE_ENV: z.enum([NODE_ENV.DEVELOPMENT, NODE_ENV.PRODUCTION, NODE_ENV.TEST]).default(NODE_ENV.DEVELOPMENT),
 
 	// Database Configuration
 	DB_HOST: z.string().min(1, ENV_VALIDATION_MESSAGES.DB_HOST_REQUIRED),
@@ -30,7 +30,7 @@ export const envSchema = z.object({
 
 	// Application Configuration
 	APP_NAME: z.string().min(1, ENV_VALIDATION_MESSAGES.APP_NAME_REQUIRED),
-	APP_URL: z.url(ENV_VALIDATION_MESSAGES.APP_URL_MUST_BE_VALID),
+	APP_URL: z.string().url(ENV_VALIDATION_MESSAGES.APP_URL_MUST_BE_VALID),
 
 	// GOOGLE_OAUTH
 	GOOGLE_CLIENT_ID: z
@@ -39,6 +39,12 @@ export const envSchema = z.object({
 	GOOGLE_CLIENT_SECRET: z
 		.string()
 		.min(1, ENV_VALIDATION_MESSAGES.GOOGLE_CLIENT_SECRET_REQUIRED),
+
+	// Redis Configuration
+	REDIS_URL: z.string().url().optional(),
+	REDIS_HOST: z.string().optional().default("localhost"),
+	REDIS_PORT: z.string().optional().default("6379"),
+	REDIS_PASSWORD: z.string().optional(),
 });
 
 // Type inference for environment variables
